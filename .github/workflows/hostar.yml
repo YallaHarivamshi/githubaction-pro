@@ -63,17 +63,18 @@ jobs:
           sonar-scanner -v
       # 7. SonarQube analysis
       - name: SonarQube Analysis
-  env:
-    SONAR_HOST: ${{ secrets.SONAR_HOST }}
-    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  run: |
-    echo "SonarQube server URL: $SONAR_HOST"
-    curl -I "$SONAR_HOST"
+        env:
+           SONAR_HOST: ${{ secrets.SONAR_HOST }}
+           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+         run: |
+            echo "SonarQube server URL: $SONAR_HOST"
 
-    mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-      -Dsonar.projectKey=hotstar \
-      -Dsonar.host.url="$SONAR_HOST" \
-      -Dsonar.token="$SONAR_TOKEN"
+            curl -f "$SONAR_HOST/api/system/status"
+
+            mvn org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar \
+             -Dsonar.projectKey=hotstar \
+             -Dsonar.host.url="$SONAR_HOST" \
+             -Dsonar.token="$SONAR_TOKEN"
 
   deploy:
     runs-on: [self-hosted, linux]
